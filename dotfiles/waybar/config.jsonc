@@ -1,0 +1,79 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 28,
+  "modules-left": ["hyprland/workspaces"],
+  "modules-center": ["clock"],
+  "modules-right": [
+    "cpu",
+    "memory",
+    "temperature",
+    "battery",
+    "network",
+    "bluetooth",
+    "pulseaudio",
+    "mpris"
+  ],
+
+  // Modules configuration
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "disable-scroll": true
+  },
+
+  "clock": {
+    "format": "{:%a %d %b  %I:%M %p}",
+    "tooltip": false
+  },
+
+  "cpu": {
+    "format": " {usage}%",
+    "tooltip": false
+  },
+
+  "memory": {
+    "format": " {used}G",
+    "tooltip": false
+  },
+
+  "temperature": {
+    "format": " {temperatureC}°C",
+    "tooltip": false
+  },
+
+  "battery": {
+    "format": "{icon} {capacity}%",
+    "format-icons": ["", "", "", "", ""],
+    "tooltip": false
+  },
+
+  "network": {
+    "format-wifi": "  {essid}",
+    "format-ethernet": "  {ifname}",
+    "format-disconnected": "󰖪",
+    "tooltip": false
+  },
+
+  "bluetooth": {
+    "format": " {status}",
+    "format-connected": " {device_alias}",
+    "format-off": " off",
+    "tooltip": false
+  },
+
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": " mute",
+    "format-icons": {
+      "default": ["", "", ""]
+    },
+    "tooltip": false
+  },
+
+  "mpris": {
+    "format": "{title} ",
+    "max-length": 25,
+    "tooltip": false
+  }
+}
+
