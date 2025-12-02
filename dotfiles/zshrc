@@ -1,0 +1,85 @@
+# wal colors
+(cat ~/.cache/wal/sequences &)
+source ~/.cache/wal/colors-tty.sh
+
+[[ $- != *i* ]] && return
+
+# --- Zinit setup ---
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+if [[ ! -d "$ZINIT_HOME" ]]; then
+  mkdir -p "$(dirname "$ZINIT_HOME")"
+  git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+source "${ZINIT_HOME}/zinit.zsh"
+
+# --- Plugins (lazy) ---
+zinit ice wait lucid
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab
+
+# --- OMZ snippets ---
+zinit snippet OMZP::git
+zinit snippet OMZP::sudo
+zinit snippet OMZP::archlinux
+zinit snippet OMZP::aws
+zinit snippet OMZP::kubectl
+zinit snippet OMZP::kubectx
+zinit snippet OMZP::command-not-found
+
+# --- Completion caching ---
+autoload -Uz compinit
+compinit -C
+
+# --- Keybindings ---
+bindkey -e
+bindkey "^p" history-search-backward
+bindkey "^n" history-search-forward
+
+# --- History ---
+HISTSIZE=5000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt APPEND_HISTORY SHARE_HISTORY HIST_IGNORE_SPACE HIST_IGNORE_DUPS HIST_SAVE_NO_DUPS HIST_EXPIRE_DUPS_FIRST
+
+# --- Styles ---
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+
+# --- Aliases ---
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias code='~/VSCode/code.AppImage'
+alias t='tmux'
+alias air='$(go env GOPATH)/bin/air'
+alias risin='source ~/rising.sh'
+alias templ='$(go env GOPATH)/bin/templ'
+alias amogus='source ~/amogus.sh'
+
+ct() { [[ -n "$1" ]] && cd "$1"; tmux }
+compdef ct=cd
+
+# --- PATH setup ---
+export PATH="$HOME/.pyenv/bin:$HOME/.config/composer/vendor/bin:$PATH"
+export PYTHONPATH=/usr/lib/python3.11/site-packages
+
+# --- Lazy background init ---
+autoload -Uz add-zsh-hook
+background_init() {
+  eval "$(fzf --zsh)"
+  eval "$(zoxide init --cmd cd zsh)"
+  eval "$(starship init zsh)"
+  eval "$(pyenv init -)"
+  eval "$(~/.local/bin/mise activate)"
+}
+add-zsh-hook precmd background_init
+
+# --- Finish ---
+zinit cdreplay -q
+
+
+[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path zsh)"
